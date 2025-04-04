@@ -1,0 +1,3 @@
+[submodule "lib/waveshare_eink_2in13_v4_opi3b"]
+	path = lib/waveshare_eink_2in13_v4_opi3b
+	url = https://github.com/kiramint/waveshare_eink_2in13_v4_opi3b
