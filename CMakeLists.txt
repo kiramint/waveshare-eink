@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.21.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 17)
 
-project(E-Paper)
+project(E-Paper VERSION 1.0)
 
 # Waveshare
 add_subdirectory(lib/waveshare_eink_2in13_v4_opi3b)
