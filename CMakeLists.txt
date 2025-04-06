@@ -10,7 +10,9 @@ add_subdirectory(lib/waveshare_eink_2in13_v4_opi3b)
 
 # OpenCV
 find_package(OpenCV REQUIRED)
-include_directories( ${OpenCV_INCLUDE_DIRS} )
+include_directories(
+    ${OpenCV_INCLUDE_DIRS} 
+)
 
 add_executable(${PROJECT_NAME} 
     Program.cpp

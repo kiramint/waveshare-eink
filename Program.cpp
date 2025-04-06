@@ -1,12 +1,12 @@
-#include <iostream>
-#include <chrono>
-#include <thread>
-#include <memory>
 #include <bitset>
-#include <vector>
+#include <chrono>
 #include <exception>
-#include <signal.h>
+#include <iostream>
+#include <memory>
 #include <opencv2/opencv.hpp>
+#include <signal.h>
+#include <thread>
+#include <vector>
 
 #include "DEV_Config.h"
 #include "EPD_2in13_V4.h"
@@ -61,7 +61,7 @@ public:
 
         void destroy()
         {
-            bool cancellationToken = true;
+            cancellationToken = true;
             GT_Reset();
             scanThread->join();
             cout << "Touch off" << endl;
@@ -92,7 +92,8 @@ public:
                         Dev_Now->Touch = 1;
 
                         // Software request
-                        if (GT_Scan() == 1 || (Dev_Now->X[0] == Dev_Old->X[0] && Dev_Now->Y[0] == Dev_Old->Y[0]))
+                        if (GT_Scan() == 1 || (Dev_Now->X[0] == Dev_Old->X[0] &&
+                                               Dev_Now->Y[0] == Dev_Old->Y[0]))
                         {
                             // No new touch
                             continue;
@@ -108,10 +109,10 @@ public:
                             for (int i = 0; i < Dev_Now->TouchCount; i++)
                             {
                                 // XY have adjust to QT Opencv mode
-                                EinkTouchPoint touchPoint{
-                                    .xDirect = (u_int16_t)255 - Dev_Now->Y[i],
-                                    .yDirect = Dev_Now->X[i],
-                                    .size = Dev_Now->S[i]};
+                                EinkTouchPoint touchPoint{.xDirect =
+                                                              (u_int16_t)255 - Dev_Now->Y[i],
+                                                          .yDirect = Dev_Now->X[i],
+                                                          .size = Dev_Now->S[i]};
                                 touchData.emplace_back(touchPoint);
                             }
 
@@ -237,9 +238,9 @@ public:
         {
             // cout << "Display init" << endl;
             using namespace chrono;
-            lastActivate = duration_cast<seconds>(
-                               system_clock::now().time_since_epoch())
-                               .count();
+            lastActivate =
+                duration_cast<seconds>(system_clock::now().time_since_epoch())
+                    .count();
             epdSleep = false;
         }
 
@@ -251,9 +252,9 @@ public:
                 try
                 {
                     using namespace chrono;
-                    auto timeNow = duration_cast<seconds>(
-                                       system_clock::now().time_since_epoch())
-                                       .count();
+                    auto timeNow =
+                        duration_cast<seconds>(system_clock::now().time_since_epoch())
+                            .count();
                     auto interval = timeNow - lastActivate;
 
                     if (interval > sleepInterval && epdSleep == false)
@@ -280,7 +281,8 @@ public:
             {
                 return 100;
             }
-            if (thisImage.size() != lastImage.size() || thisImage.type() != lastImage.type())
+            if (thisImage.size() != lastImage.size() ||
+                thisImage.type() != lastImage.type())
             {
                 return 100;
             }
@@ -306,20 +308,22 @@ public:
             int imgWidth = sourceImage.cols;
             int imgHeight = sourceImage.rows;
 
-            double scale = std::min(
-                static_cast<double>(screenWidth) / imgWidth,
-                static_cast<double>(screenHight) / imgHeight);
+            double scale = std::min(static_cast<double>(screenWidth) / imgWidth,
+                                    static_cast<double>(screenHight) / imgHeight);
 
             cv::Mat resizedImage;
-            cv::resize(sourceImage, resizedImage, cv::Size(), scale, scale, cv::INTER_LINEAR);
+            cv::resize(sourceImage, resizedImage, cv::Size(), scale, scale,
+                       cv::INTER_LINEAR);
 
-            cv::Mat fitedImage = cv::Mat::zeros(screenHight, screenWidth, sourceImage.type());
+            cv::Mat fitedImage =
+                cv::Mat::zeros(screenHight, screenWidth, sourceImage.type());
             fitedImage.setTo(cv::Scalar(255, 255, 255));
 
             int offset_x = (screenWidth - resizedImage.cols) / 2;
             int offset_y = (screenHight - resizedImage.rows) / 2;
 
-            cv::Mat roi = fitedImage(cv::Rect(offset_x, offset_y, resizedImage.cols, resizedImage.rows));
+            cv::Mat roi = fitedImage(
+                cv::Rect(offset_x, offset_y, resizedImage.cols, resizedImage.rows));
             resizedImage.copyTo(roi);
 
             cv::Mat rotatedImage;
@@ -358,14 +362,8 @@ public:
         }
     };
 
-    shared_ptr<Touch> getTouch()
-    {
-        return _touch;
-    }
-    shared_ptr<Display> getDisplay()
-    {
-        return _display;
-    }
+    shared_ptr<Touch> getTouch() { return _touch; }
+    shared_ptr<Display> getDisplay() { return _display; }
 
 private:
     shared_ptr<Touch> _touch;
@@ -397,7 +395,8 @@ void signal_handler(int signum)
     {
         signalCalled++;
         cout << endl
-             << "Closing... be patient (•́ω•̀ o) (Ctrl+C 5 times to terminate)." << endl;
+             << "Closing... be patient (•́ω•̀ o) (Ctrl+C 5 times to terminate)."
+             << endl;
     }
 }
 
@@ -406,7 +405,8 @@ void scrCallBack(vector<Eink::EinkTouchPoint> touchData)
     cout << "Touch Points:" << endl;
     for (auto it : touchData)
     {
-        cout << "\txDirect: " << it.xDirect << ", yDirect: " << it.yDirect << ", size: " << it.size << endl;
+        cout << "\txDirect: " << it.xDirect << ", yDirect: " << it.yDirect
+             << ", size: " << it.size << endl;
     }
 }
 
