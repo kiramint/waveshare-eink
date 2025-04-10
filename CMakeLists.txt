@@ -11,14 +11,20 @@ add_subdirectory(lib/waveshare_eink_2in13_v4_opi3b)
 # OpenCV
 find_package(OpenCV REQUIRED)
 include_directories(
-    ${OpenCV_INCLUDE_DIRS} 
+        ${OpenCV_INCLUDE_DIRS}
 )
 
-add_executable(${PROJECT_NAME} 
-    Program.cpp
+add_executable(${PROJECT_NAME}
+        Program.cpp
+        driver/Eink.cpp
+        driver/Eink.h
+        driver/X11Redirect.cpp
+        driver/X11Redirect.h
 )
 
-target_link_libraries(${PROJECT_NAME} 
-    WaveshareDrivers
-    ${OpenCV_LIBS}
+target_link_libraries(${PROJECT_NAME}
+        WaveshareDrivers
+        ${OpenCV_LIBS}
+        X11
+        Xtst
 )
